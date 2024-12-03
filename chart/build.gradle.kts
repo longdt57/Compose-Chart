@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    id("maven-publish")
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
@@ -49,4 +50,24 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["release"])  // or components["debug"] for debug builds
+            pom {
+                name.set("Compose-Chart")
+                description.set("Compose Chart")
+                url.set("https://github.com/longdt57/Compose-Chart")
+            }
+        }
+    }
+
+    repositories {
+        // Publish to a local directory (not JitPack)
+        maven {
+            url = uri("${buildDir}/repo")  // Local folder to store published artifacts
+        }
+    }
 }
